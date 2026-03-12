@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedAdiut – AI Medical Copilot for Israeli Clinics</title>
+  <meta name="description" content="MedAdiut gives Israeli clinic teams an AI-powered documentation copilot that drafts structured clinical notes in Hebrew — automatically, securely, in seconds." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Tokens ─────────────────────────────────────────────── */
+    :root {
+      --navy:       #0f2444;
+      --navy-mid:   #1e3a5f;
+      --teal:       #0d9488;
+      --teal-light: #e6f7f6;
+      --teal-mid:   #ccefed;
+      --green-soft: #f0fdf4;
+      --white:      #ffffff;
+      --gray-50:    #f8fafc;
+      --gray-100:   #f1f5f9;
+      --gray-200:   #e2e8f0;
+      --gray-400:   #94a3b8;
+      --gray-600:   #475569;
+      --gray-800:   #1e293b;
+      --radius-sm:  8px;
+      --radius:     12px;
+      --radius-lg:  20px;
+      --shadow-sm:  0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.05);
+      --shadow:     0 4px 16px rgba(0,0,0,.08);
+      --shadow-lg:  0 12px 40px rgba(0,0,0,.10);
+    }
+
+    /* ── Reset ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--white);
+      color: var(--navy);
+      line-height: 1.7;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: var(--teal); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Utility ────────────────────────────────────────────── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
+    .section   { padding: 96px 0; }
+    .section-sm { padding: 64px 0; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--teal-light);
+      color: var(--teal);
+      border-radius: 999px;
+      padding: 5px 14px;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .section-label {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 10px;
+    }
+
+    h2.section-title {
+      font-size: clamp(1.65rem, 3vw, 2.25rem);
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -.02em;
+      line-height: 1.2;
+    }
+
+    .section-sub {
+      max-width: 520px;
+      margin: 14px auto 0;
+      color: var(--gray-600);
+      font-size: 1rem;
+    }
+
+    .text-center { text-align: center; }
+
+    /* ── Buttons ────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-weight: 600;
+      font-size: .9rem;
+      cursor: pointer;
+      border: none;
+      transition: all .2s ease;
+      text-decoration: none !important;
+    }
+    .btn-primary {
+      background: var(--teal);
+      color: #fff;
+      padding: 13px 28px;
+      box-shadow: 0 2px 8px rgba(13,148,136,.3);
+    }
+    .btn-primary:hover {
+      background: #0b7a70;
+      box-shadow: 0 4px 16px rgba(13,148,136,.35);
+      transform: translateY(-1px);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--navy);
+      padding: 13px 24px;
+      border: 1.5px solid var(--gray-200);
+    }
+    .btn-ghost:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      transform: translateY(-1px);
+    }
+    .btn-lg { padding: 16px 36px; font-size: 1rem; }
+
+    /* ── Navbar ─────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 66px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; font-size: 1.15rem; color: var(--navy);
+      letter-spacing: -.02em;
+    }
+    .nav-logo-icon {
+      width: 34px; height: 34px;
+      background: var(--teal);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-icon svg { width: 18px; height: 18px; }
+    .nav-logo span { color: var(--teal); }
+    .nav-links {
+      display: flex; gap: 28px; align-items: center;
+    }
+    .nav-links a {
+      color: var(--gray-600);
+      font-size: .9rem;
+      font-weight: 500;
+      transition: color .15s;
+    }
+    .nav-links a:hover { color: var(--navy); text-decoration: none; }
+    .nav-cta { padding: 9px 20px; font-size: .875rem; border-radius: var(--radius-sm); }
+
+    /* ── Hero ───────────────────────────────────────────────── */
+    .hero {
+      padding: 96px 0 80px;
+      background: var(--white);
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .hero-badge { margin-bottom: 20px; }
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -.03em;
+      line-height: 1.12;
+      margin-bottom: 20px;
+      text-wrap: balance;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--teal);
+    }
+    .hero-sub {
+      color: var(--gray-600);
+      font-size: 1.05rem;
+      margin-bottom: 36px;
+      max-width: 480px;
+      line-height: 1.75;
+    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-visual {
+      position: relative;
+    }
+    .hero-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+    .hero-card-header {
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 14px 20px;
+      display: flex; gap: 8px; align-items: center;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-red   { background: #fc635d; }
+    .dot-yel   { background: #fdbe40; }
+    .dot-grn   { background: #34c749; }
+    .hero-card-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+    .note-block {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      font-size: .85rem;
+      color: var(--gray-600);
+      line-height: 1.6;
+      font-family: 'Inter', sans-serif;
+    }
+    .note-block strong { color: var(--navy); }
+    .note-label {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      margin-bottom: 6px;
+    }
+    .redacted { display: inline-block; background: var(--teal-mid); color: var(--teal); border-radius: 3px; padding: 0 6px; font-weight: 600; font-size: .8rem; }
+    .report-block {
+      background: linear-gradient(135deg, var(--teal-light), #f0fdf9);
+      border: 1px solid var(--teal-mid);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      direction: rtl;
+      text-align: right;
+      font-size: .85rem;
+      color: var(--navy-mid);
+      line-height: 1.7;
+    }
+    .report-block .r-label {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 6px;
+      direction: ltr;
+      text-align: left;
+    }
+    .status-row {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%  { opacity: .5; transform: scale(.8); }
+    }
+    .status-text { font-size: .78rem; color: var(--gray-400); font-weight: 500; }
+
+    /* ── Trust strip ────────────────────────────────────────── */
+    .trust-strip {
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-200);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 20px 0;
+    }
+    .trust-inner {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; flex-wrap: wrap;
+    }
+    .trust-divider { color: var(--gray-200); font-size: 1.2rem; }
+    .trust-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: .77rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      letter-spacing: .01em;
+      white-space: nowrap;
+    }
+    .trust-item svg { width: 16px; height: 16px; color: var(--teal); }
+
+    /* ── Integration bar ────────────────────────────────────── */
+    .integrations {
+      padding: 56px 0;
+      text-align: center;
+    }
+    .int-label {
+      font-size: .75rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--gray-600); margin-bottom: 24px;
+    }
+    .int-logos {
+      display: flex; align-items: center; justify-content: center;
+      gap: 32px; flex-wrap: wrap;
+    }
+    .int-logo {
+      background: var(--white);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: 10px 22px;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--gray-600);
+      letter-spacing: .02em;
+      transition: border-color .2s;
+    }
+    .int-logo:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* ── Stats ──────────────────────────────────────────────── */
+    .stats {
+      background: var(--navy);
+      padding: 64px 0;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,.1);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .stat-item {
+      background: var(--navy);
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -.04em;
+      line-height: 1;
+    }
+    .stat-num span { color: var(--teal); }
+    .stat-label {
+      margin-top: 8px;
+      font-size: .875rem;
+      color: rgba(255,255,255,.55);
+      font-weight: 500;
+    }
+
+    /* ── How it works ───────────────────────────────────────── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 2px;
+      background: var(--gray-200);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-top: 52px;
+    }
+    .step-item {
+      background: var(--white);
+      padding: 36px 28px;
+      position: relative;
+      transition: background .2s;
+    }
+    .step-item:hover { background: var(--gray-50); }
+    .step-num-tag {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--teal-light);
+      color: var(--teal);
+      font-size: .8rem;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+    .step-item h3 {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .step-item p {
+      font-size: .85rem;
+      color: var(--gray-600);
+      line-height: 1.65;
+    }
+
+    /* ── Features ───────────────────────────────────────────── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 52px;
+    }
+    .feature-card {
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 32px;
+      background: var(--white);
+      transition: border-color .2s, box-shadow .2s, transform .2s;
+    }
+    .feature-card:hover {
+      border-color: var(--teal);
+      box-shadow: 0 8px 32px rgba(13,148,136,.09);
+      transform: translateY(-2px);
+    }
+    .feature-icon {
+      width: 44px; height: 44px;
+      border-radius: var(--radius-sm);
+      background: var(--teal-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 18px;
+    }
+    .feature-card h3 {
+      font-size: .97rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      font-size: .875rem;
+      color: var(--gray-600);
+      line-height: 1.7;
+    }
+    .feature-tag {
+      margin-top: 14px;
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--teal);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    /* ── Testimonials ───────────────────────────────────────── */
+    .testimonials { background: var(--gray-50); }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 48px;
+    }
+    .testimonial-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+    .stars { color: #f59e0b; font-size: 1rem; letter-spacing: 2px; margin-bottom: 14px; }
+    .testimonial-text {
+      font-size: .9rem;
+      color: var(--gray-800);
+      line-height: 1.75;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--teal-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .9rem; color: var(--teal);
+    }
+    .author-name { font-size: .85rem; font-weight: 700; color: var(--navy); }
+    .author-role { font-size: .77rem; color: var(--gray-400); }
+
+    /* ── Security callout ───────────────────────────────────── */
+    .security {
+      background: var(--navy);
+      padding: 80px 0;
+    }
+    .security-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .security h2 { color: #fff; }
+    .security .section-label { color: var(--teal); opacity: .8; }
+    .security p { color: rgba(255,255,255,.65); margin-top: 16px; font-size: .95rem; line-height: 1.8; }
+    .security-checklist {
+      margin-top: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .check-item {
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .check-icon {
+      flex-shrink: 0;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: rgba(13,148,136,.2);
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 2px;
+    }
+    .check-icon svg { width: 12px; height: 12px; }
+    .check-text { font-size: .875rem; color: rgba(255,255,255,.75); line-height: 1.6; }
+    .check-text strong { color: #fff; font-weight: 600; }
+    .security-visual {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+    }
+    .sec-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .sec-row:last-child { border-bottom: none; }
+    .sec-icon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(13,148,136,.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .sec-text { font-size: .85rem; color: rgba(255,255,255,.75); }
+    .sec-text strong { color: #fff; display: block; margin-bottom: 2px; font-size: .875rem; }
+
+    /* ── CTA ────────────────────────────────────────────────── */
+    .cta-section { padding: 96px 0; }
+    .cta-box {
+      background: linear-gradient(135deg, var(--teal-light) 0%, #fff 60%);
+      border: 1.5px solid var(--teal-mid);
+      border-radius: var(--radius-lg);
+      padding: 80px 48px;
+      text-align: center;
+    }
+    .cta-box h2 {
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -.03em;
+      margin-bottom: 14px;
+    }
+    .cta-box p { color: var(--gray-600); max-width: 480px; margin: 0 auto 36px; }
+    .cta-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .cta-note { margin-top: 18px; font-size: .8rem; color: var(--gray-400); }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    footer {
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-200);
+      padding: 48px 0 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .footer-brand p {
+      margin-top: 10px;
+      font-size: .85rem;
+      color: var(--gray-400);
+      max-width: 220px;
+      line-height: 1.65;
+    }
+    .footer-col h4 {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      margin-bottom: 14px;
+    }
+    .footer-col a {
+      display: block;
+      font-size: .875rem;
+      color: var(--gray-600);
+      margin-bottom: 8px;
+      transition: color .15s;
+    }
+    .footer-col a:hover { color: var(--teal); text-decoration: none; }
+    .footer-bottom {
+      border-top: 1px solid var(--gray-200);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: .8rem;
+      color: var(--gray-400);
+    }
+    .footer-bottom a { color: var(--gray-400); }
+    .footer-bottom a:hover { color: var(--teal); text-decoration: none; }
+
+    /* ── Animations ─────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp .55s ease both; }
+    .d1 { animation-delay: .1s; }
+    .d2 { animation-delay: .2s; }
+    .d3 { animation-delay: .3s; }
+    .d4 { animation-delay: .4s; }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .hero-inner   { grid-template-columns: 1fr; gap: 40px; }
+      .hero h1      { font-size: 2rem; }
+      .security-inner { grid-template-columns: 1fr; }
+      .stats-grid   { grid-template-columns: 1fr; }
+      .footer-grid  { grid-template-columns: 1fr 1fr; }
+      .nav-links    { display: none; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid  { grid-template-columns: 1fr; }
+      .cta-box      { padding: 48px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ────────────────────────────────── NAVBAR ── -->
+<nav>
+  <div class="container nav-inner">
+    <div class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <rect x="6.5" y="1" width="5" height="16" rx="2" fill="white"/>
+          <rect x="1" y="6.5" width="16" height="5" rx="2" fill="white"/>
+        </svg>
+      </div>
+      <div style="display: flex; align-items: center;">Med<span>Adiut</span></div>
+    </div>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#security">Security</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a href="#contact" class="btn btn-primary nav-cta">Book a Demo</a>
+  </div>
+</nav>
+
+<!-- ────────────────────────────────── HERO ── -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div>
+      <div class="hero-badge fade-up">
+        <span class="badge">🇮🇱 Built for Israeli Private Clinics</span>
+      </div>
+      <h1 class="fade-up d1">
+        Clinical notes<br>in seconds.<br><em>Zero patient data to the cloud.</em>
+      </h1>
+      <p class="hero-sub fade-up d2">
+        MedAdiut is the AI documentation copilot that lets your physicians dictate in natural language and receive a structured, Hebrew-language clinical note — instantly, securely, and completely anonymised before it ever leaves your network.
+      </p>
+      <div class="hero-actions fade-up d3">
+        <a href="#contact" class="btn btn-primary btn-lg">Book a Free Demo</a>
+        <a href="#how" class="btn btn-ghost btn-lg">See how it works</a>
+      </div>
+    </div>
+    <div class="hero-visual fade-up d4">
+      <div class="hero-card">
+        <div class="hero-card-header">
+          <div class="dot dot-red"></div>
+          <div class="dot dot-yel"></div>
+          <div class="dot dot-grn"></div>
+        </div>
+        <div class="hero-card-body">
+          <div>
+            <div class="note-label">Doctor's dictation (raw)</div>
+            <div class="note-block" dir="rtl">
+              המטופל <strong>דוד כהן</strong>, ת.ז. <strong>312456789</strong>, מתלונן על כאב ראש קשה כבר 3 ימים.
+              לא נוטל תרופות. אלרגי לפניצילין.
+            </div>
+          </div>
+          <div class="status-row">
+            <div class="status-dot"></div>
+            <div class="status-text">Securing patient identity locally…</div>
+          </div>
+          <div>
+            <div class="note-label">PII removed — safe to process ✓</div>
+            <div class="note-block" dir="rtl">
+              המטופל <span class="redacted">[PATIENT_NAME]</span>, ת.ז. <span class="redacted">[ID_NUMBER]</span>,
+              מתלונן על כאב ראש קשה כבר 3 ימים. לא נוטל תרופות. אלרגי לפניצילין.
+            </div>
+          </div>
+          <div>
+            <div class="report-block">
+              <div class="r-label">AI Clinical Note (Hebrew RTL) ✓</div>
+              <strong>ביקור רפואי – תלונות:</strong> כאב ראש מתמשך – 3 ימים.<br/>
+              <strong>אלרגיות:</strong> פניצילין.<br/>
+              <strong>המלצה:</strong> בדיקות דם + מנוחה. תרופות לפי הנחיות המרפאה.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────── TRUST STRIP ── -->
+<div class="trust-strip">
+  <div class="container trust-inner">
+    <div class="trust-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1L2 4v4c0 3.3 2.6 6.4 6 7 3.4-.6 6-3.7 6-7V4L8 1z"/></svg>
+      Patient data never leaves your premises
+    </div>
+    <span class="trust-divider">|</span>
+    <div class="trust-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1.5 8.5 5.5 12.5 14.5 3.5"/></svg>
+      Compliant with Israeli Ministry of Health privacy standards
+    </div>
+    <span class="trust-divider">|</span>
+    <div class="trust-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 5v3.5L10 10"/></svg>
+      Average note generated in under 8 seconds
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────── INTEGRATIONS ── -->
+<div class="integrations">
+  <div class="container">
+    <p class="int-label">Integrates with the tools your clinic already uses</p>
+    <div class="int-logos">
+      <div class="int-logo">Chameleon EMR</div>
+      <div class="int-logo">CliqueDoc</div>
+      <div class="int-logo">Click Medical</div>
+      <div class="int-logo">Clalit Digital</div>
+      <div class="int-logo">Custom HIS / API</div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────── STATS ── -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num">3<span>h</span></div>
+        <div class="stat-label">saved per physician per day on documentation</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">0<span>%</span></div>
+        <div class="stat-label">of patient data transmitted to the cloud</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">8<span>s</span></div>
+        <div class="stat-label">average time to generate a complete clinical note</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────── HOW IT WORKS ── -->
+<section class="section" id="how">
+  <div class="container text-center">
+    <p class="section-label">Workflow</p>
+    <h2 class="section-title">From dictation to structured record<br>in five effortless steps</h2>
+    <p class="section-sub">Designed around the doctor's natural workflow — not around software.</p>
+    <div class="steps-grid">
+      <div class="step-item">
+        <div class="step-num-tag">1</div>
+        <h3>Doctor Dictates</h3>
+        <p>The physician speaks or types notes naturally — in Hebrew, English, or a mix. No special formatting required.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-tag">2</div>
+        <h3>On-Site Anonymisation</h3>
+        <p>Patient names, ID numbers (ת.ז.), and contact details are removed <em>on your server</em> before processing begins.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-tag">3</div>
+        <h3>Smart Clinical Structuring</h3>
+        <p>AI identifies symptoms, duration, medications, allergies and preliminary diagnosis — and formats them precisely.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-tag">4</div>
+        <h3>Automated Protocol Verification</h3>
+        <p>Your clinic's internal treatment protocols are automatically cross-referenced to support best-practice documentation.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-tag">5</div>
+        <h3>Hebrew RTL Report</h3>
+        <p>A polished, right-to-left formatted clinical note is ready — copy directly into your EMR or print for the chart.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────── FEATURES ── -->
+<section class="section" id="features" style="padding-top:0">
+  <div class="container">
+    <div class="text-center">
+      <p class="section-label">Features</p>
+      <h2 class="section-title">Everything your clinic needs<br>to document smarter</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Zero Patient Data to the Cloud</h3>
+        <p>All anonymisation runs locally on your clinic's server using certified on-premise technology. No patient record is ever transmitted externally.</p>
+        <div class="feature-tag">Privacy First</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🇮🇱</div>
+        <h3>Hebrew RTL, Native Quality</h3>
+        <p>Reports are written in Medical Hebrew with correct right-to-left formatting, familiar terminology, and full compliance with Israeli health record standards.</p>
+        <div class="feature-tag">Regulatory Ready</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🪪</div>
+        <h3>Teudat Zehut Auto-Detection</h3>
+        <p>Nine-digit Israeli ID numbers are automatically recognised and redacted — protecting your clinic from data exposure even when staff forget.</p>
+        <div class="feature-tag">Compliance Built-In</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⏱️</div>
+        <h3>Saves up to 3 Hours Per Physician Daily</h3>
+        <p>Less time on paperwork means more patient face-time, reduced physician burnout, and measurably higher clinic throughput.</p>
+        <div class="feature-tag">Operational ROI</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </div>
+        <h3>Universal Compatibility</h3>
+        <p>No complex API setup required. Reports are generated in a structured, RTL-ready format that you can securely copy and paste directly into Chameleon, Click, or any Israeli EMR system.</p>
+        <div class="feature-tag">Zero Setup Required</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3>Your Protocols, Always Followed</h3>
+        <p>Upload your clinic's treatment guidelines once, and every generated note is automatically cross-checked — reducing clinical errors and standardising care.</p>
+        <div class="feature-tag">Quality Assurance</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────── TESTIMONIALS ── -->
+<section class="section testimonials">
+  <div class="container text-center">
+    <p class="section-label">From the clinics</p>
+    <h2 class="section-title">Physicians and administrators<br>who use MedAdiut daily</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Before MedAdiut, I was spending the last hour of every shift finishing notes. Now I leave on time. The Hebrew quality is excellent — I rarely need to edit."</p>
+        <div class="testimonial-author">
+          <div class="avatar">ד״ר</div>
+          <div>
+            <div class="author-name">Dr. Michal Ben-David</div>
+            <div class="author-role">Head Physician, Private Family Clinic, Tel Aviv</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"As clinic director, data security is my top priority. The fact that patient identifiers never leave our network was the deciding factor for us."</p>
+        <div class="testimonial-author">
+          <div class="avatar">מ״מ</div>
+          <div>
+            <div class="author-name">Miriam Mizrahi</div>
+            <div class="author-role">Clinic Director, Haifa Specialist Centre</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"We onboarded five physicians in one afternoon. The integration with our EMR was smooth and support was responsive throughout. Highly recommend."</p>
+        <div class="testimonial-author">
+          <div class="avatar">א׳</div>
+          <div>
+            <div class="author-name">Avi Shapiro</div>
+            <div class="author-role">Medical Administrator, Jerusalem Multi-Specialty Clinic</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────── SECURITY ── -->
+<section class="security" id="security">
+  <div class="container security-inner">
+    <div>
+      <p class="section-label">Privacy & security</p>
+      <h2 class="section-title" style="color:#fff">Built for the strictest<br>medical data standards</h2>
+      <p>MedAdiut was designed from the ground up to satisfy the Israeli Ministry of Health data privacy directives — not just to comply, but to exceed them.</p>
+      <div class="security-checklist">
+        <div class="check-item">
+          <div class="check-icon">
+            <svg viewBox="0 0 12 12" fill="none" stroke="#0d9488" stroke-width="2"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>
+          </div>
+          <div class="check-text"><strong>On-premises PII redaction.</strong> Names, phone numbers, Israeli ID numbers and addresses are stripped locally — before any AI processing occurs.</div>
+        </div>
+        <div class="check-item">
+          <div class="check-icon">
+            <svg viewBox="0 0 12 12" fill="none" stroke="#0d9488" stroke-width="2"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>
+          </div>
+          <div class="check-text"><strong>No patient PII sent to any external server.</strong> The AI processes only anonymised clinical content.</div>
+        </div>
+        <div class="check-item">
+          <div class="check-icon">
+            <svg viewBox="0 0 12 12" fill="none" stroke="#0d9488" stroke-width="2"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>
+          </div>
+          <div class="check-text"><strong>Automatic Teudat Zehut detection.</strong> Israeli 9-digit ID patterns are caught and redacted instantly, even if staff forget.</div>
+        </div>
+        <div class="check-item">
+          <div class="check-icon">
+            <svg viewBox="0 0 12 12" fill="none" stroke="#0d9488" stroke-width="2"><polyline points="1.5 6 4.5 9 10.5 3"/></svg>
+          </div>
+          <div class="check-text"><strong>Full audit trail.</strong> Every document event is logged locally for compliance review.</div>
+        </div>
+      </div>
+    </div>
+    <div class="security-visual">
+      <div class="sec-row">
+        <div class="sec-icon">🕵️</div>
+        <div class="sec-text">
+          <strong>Identity Redaction Layer</strong>
+          Runs locally on clinic hardware — zero cloud dependency
+        </div>
+      </div>
+      <div class="sec-row">
+        <div class="sec-icon">🔀</div>
+        <div class="sec-text">
+          <strong>Anonymised Data Only Leaves Site</strong>
+          Clinical facts, no personal identifiers
+        </div>
+      </div>
+      <div class="sec-row">
+        <div class="sec-icon">🇮🇱</div>
+        <div class="sec-text">
+          <strong>Ministry of Health Aligned</strong>
+          Designed to meet Israeli health data privacy requirements
+        </div>
+      </div>
+      <div class="sec-row">
+        <div class="sec-icon">📁</div>
+        <div class="sec-text">
+          <strong>Local Audit Log</strong>
+          All processing events stored securely on your servers
+        </div>
+      </div>
+      <div class="sec-row">
+        <div class="sec-icon">🔐</div>
+        <div class="sec-text">
+          <strong>Role-Based Access Control</strong>
+          Restrict access by physician, department, or role
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────── CTA ── -->
+<section class="cta-section" id="contact">
+  <div class="container">
+    <div class="cta-box">
+      <h2>Ready to give your physicians<br>their time back?</h2>
+      <p>Book a 20-minute personalised demo and see MedAdiut running live with your clinical workflows — no IT department required.</p>
+      <div class="cta-actions">
+        <a href="mailto:hello@medadiut.com" class="btn btn-primary btn-lg">Book a Demo →</a>
+        <a href="mailto:hello@medadiut.com" class="btn btn-ghost btn-lg">Contact Sales</a>
+      </div>
+      <p class="cta-note">No credit card required &nbsp;·&nbsp; Setup takes less than one hour &nbsp;·&nbsp; Dedicated onboarding support</p>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────── FOOTER ── -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <div class="nav-logo-icon">
+            <svg viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <rect x="6.5" y="1" width="5" height="16" rx="2" fill="white"/>
+              <rect x="1" y="6.5" width="16" height="5" rx="2" fill="white"/>
+            </svg>
+          </div>
+          <div style="display: flex; align-items: center;">Med<span>Adiut</span></div>
+        </div>
+        <p>AI documentation copilot for Israeli private clinics. Secure, local-first, Hebrew-native.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#security">Security</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="mailto:hello@medadiut.com">About us</a>
+        <a href="mailto:hello@medadiut.com">Careers</a>
+        <a href="mailto:hello@medadiut.com">Press</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:hello@medadiut.com">hello@medadiut.com</a>
+        <a href="#contact">Book a Demo</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MedAdiut. All rights reserved.</span>
+      <span>
+        <a href="#">Privacy Policy</a> &nbsp;·&nbsp;
+        <a href="#">Terms of Service</a> &nbsp;·&nbsp;
+        <a href="#">Accessibility</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
